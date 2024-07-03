@@ -19,6 +19,53 @@ const createCompany = async (req, res) => {
     
 }
 
+const getCompany = async (req, res) => {
+    try {
+        const { companyName } = req.query;
+
+        let query = {};
+        if (companyName) {
+            query.companyName = companyName;
+        }
+
+        let companies = await companyData.find(query);
+
+        res.send({ "success": true, "data": companies });
+    } catch (error) {
+        return res.status(400).json({ success: false, error: error });
+    }
+};
+
+const insertCampaignDetails = async (req, res) => {
+    try {
+       
+        let campaignDetails = req.body;
+
+       
+        let campaign = await campaignData.create(campaignDetails);
+
+        res.send({ success: true, data: campaign });
+    } catch (error) {
+        return res.status(400).json({ success: false, error });
+    }
+};
+const getCampaignDetails = async (req, res) => {
+    try {
+        const { campaignName } = req.query;
+        let query = {};
+        if (campaignName) {
+            query.campaignName = campaignName;
+        }
+        let campaigns = await campaignData.find(query);
+        res.send({ success: true, data: campaigns });
+    } catch (error) {
+        return res.status(400).json({ success: false, error });
+    }
+};
+
+
+
+
 //getcompany
 
-module.exports = {createCompany };
+module.exports = { createCompany, getCompany, insertCampaignDetails, getCampaignDetails };
