@@ -1,23 +1,22 @@
-const mongoose = require("mongoose");
-const { CompanySchema } = require ("../schema/companySchema.js");
-const { ComopaignSchema } = require ("../schema/comopaignSchema.js");
-const companyData = mongoose.model("company", CompanySchema);
-const companyCompaigns = mongoose.model("compaign", ComopaignSchema);
-const  response  = require("../helper/response.js");
+// invoiceController.js
+
+const mongoose = require('mongoose');
+const { companySchema } = require('../schema/companySchema');
+const { compaignSchema } = require('../schema/comopaignSchema');
+const companyData = mongoose.model("company", companySchema);
+const campaignData = mongoose.model('campaign', compaignSchema);
 
 const createCompany = async (req, res) => {
     try {
-        let companyName = req.body.companyName
+        let companyName = req.body.companyName;
 
-        let company = await companyData.insertMany({companyName: companyName });
-     
-        res.send({"sucess": true, "data": company})    
+        let company = await companyData.create({ companyName });
+
+        res.send({ success: true, data: company });
     } catch (error) {
-        return res.status(400).json({ sucess: false , error: error }); 
+        return res.status(400).json({ success: false, error });
     }
-    
-    
-}
+};
 
 const getCompany = async (req, res) => {
     try {
@@ -30,18 +29,18 @@ const getCompany = async (req, res) => {
 
         let companies = await companyData.find(query);
 
-        res.send({ "success": true, "data": companies });
+        res.send({ success: true, data: companies });
     } catch (error) {
-        return res.status(400).json({ success: false, error: error });
+        return res.status(400).json({ success: false, error });
     }
 };
 
 const insertCampaignDetails = async (req, res) => {
     try {
-       
+        // Extract campaign details from request body
         let campaignDetails = req.body;
 
-       
+        // Insert campaign details into MongoDB
         let campaign = await campaignData.create(campaignDetails);
 
         res.send({ success: true, data: campaign });
@@ -49,23 +48,25 @@ const insertCampaignDetails = async (req, res) => {
         return res.status(400).json({ success: false, error });
     }
 };
+
 const getCampaignDetails = async (req, res) => {
     try {
         const { campaignName } = req.query;
-        let query = {};
-        if (campaignName) {
-            query.campaignName = campaignName;
+
+        if (!campaignName) {
+            return res.status(400).json({ success: false, error: "Campaign name is required." });
         }
-        let campaigns = await campaignData.find(query);
-        res.send({ success: true, data: campaigns });
+
+        let campaign = await campaignData.findOne({ campaignName });
+
+        if (!campaign) {
+            return res.status(404).json({ success: false, error: "Campaign not found." });
+        }
+
+        res.send({ success: true, data: campaign });
     } catch (error) {
         return res.status(400).json({ success: false, error });
     }
 };
-
-
-
-
-//getcompany
 
 module.exports = { createCompany, getCompany, insertCampaignDetails, getCampaignDetails };

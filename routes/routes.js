@@ -12,12 +12,12 @@ const CustomRoutes = (http, express) => {
   http.use(express.json());
 
  // Company Routes
- router.post("/invoiceApp/createCompany", createCompany);
- router.get("/invoiceApp/getCompany", getCompany);
+ http.post("/invoiceApp/createCompany", createCompany);
+ http.get("/invoiceApp/getCompany", getCompany);
 
  // Campaign Routes
- router.post("/invoiceApp/insertCampaignDetails", insertCampaignDetails);
- router.get("/invoiceApp/getCampaignDetails", getCampaignDetails);
+ http.post("/invoiceApp/insertCampaignDetails", insertCampaignDetails);
+ http.get("/invoiceApp/getCampaignDetails", getCampaignDetails);
 }
   // http.post("/costingapp/insertFormData", insertFormData);
   // http.post("/costingapp/Adminlogin", Adminlogin);
