@@ -110,7 +110,7 @@ const createCompany = async (req, res) => {
 
 const getCompany = async (req, res) => {
     try {
-      const { companyName, limit = 10, page = 1 } = req.query;
+      const { companyName, limit, page } = req.query;
   
       let query = {};
       if (companyName) {
@@ -118,7 +118,7 @@ const getCompany = async (req, res) => {
       }
   
       // Calculate how many documents to skip
-      const skip = (page - 1) * limit;
+      const skip = (parseInt(page) - 1) * parseInt(limit);
   
       // Fetch the companies with pagination
       let companies = await companyData.find(query)
@@ -126,13 +126,14 @@ const getCompany = async (req, res) => {
         .skip(skip);
   
       // Count the total number of documents matching the query
-      const totalCompanies = await companyData.countDocuments(query);
+      const totalCompanies = await companyData.countDocuments();
+      console.log(totalCompanies);
   
       res.send({
         success: true,
         data: companies,
-        total: totalCompanies,
-        pages: Math.ceil(totalCompanies / limit),
+        total: companies.length,
+        pages: Math.ceil(companies.length / parseInt(limit)),
         currentPage: parseInt(page)
       });
     } catch (error) {
@@ -158,6 +159,7 @@ const getCampaignDetails = async (req, res) => {
     try {
      
         const { companyId, userId, compaignName, limit = 10, page = 1 } = req.query;
+        const skip = (parseInt(page) - 1) * parseInt(limit);
 
         if (!companyId || !userId) {
             return res.status(400).json({ success: false, error: 'Company ID is required.' });
@@ -179,13 +181,13 @@ const getCampaignDetails = async (req, res) => {
             return res.status(404).json({ success: false, error: 'No campaigns found for this company.' });
         }
 
-        const totalcampaign = await companyData.countDocuments(query);
-  
+        const totalcampaign = await campaignData.countDocuments(query);
+        console.log(totalcampaign);
         res.send({
           success: true,
           data: campaign,
           total: totalcampaign,
-          pages: Math.ceil(totalcampaign / limit),
+          pages: Math.ceil(totalcampaign / +limit),
           currentPage: parseInt(page)
         });
 
