@@ -115,6 +115,11 @@ const Schema = mongoose.Schema;
     ref: 'company',
     required: true
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true
+  },
   data: [],
     
   
