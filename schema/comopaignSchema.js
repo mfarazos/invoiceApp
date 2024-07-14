@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
- const compaignSchema = new mongoose.Schema({
-    compaignName: {
+const campaignSchema = new mongoose.Schema({
+  campaignName: {
     type: String,
     required: true
   },
-
   orderId: {
     type: String,
     required: true,
@@ -15,17 +14,20 @@ const Schema = mongoose.Schema;
   website: {
     type: String,
     maxlength: 100,
-    match: /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\.-]*)*\/?$/
   },
   email: {
     type: String,
-    match: /^\S+@\S+\.\S+$/
+    
+  },
+  companyName: {
+    type: String,
+    maxlength: 50
   },
   title: {
     type: String,
     maxlength: 50
   },
-  legalBusinessName: {
+  businessName: {
     type: String,
     maxlength: 100
   },
@@ -35,34 +37,30 @@ const Schema = mongoose.Schema;
   },
   phone: {
     type: String,
-    match: /^[2-9]\d{2}-\d{3}-\d{4}$/
   },
   city: {
     type: String,
     maxlength: 50
   },
-  stateOfFormation: {
+  stateFormation: {
     type: String,
-    maxlength: 2,
-    match: /^[A-Z]{2}$/
   },
   zipCode: {
     type: String,
-    match: /^\d{5}(?:[-\s]\d{4})?$/
   },
-  typeOfEntity: {
+  entityType: {
     type: String,
     maxlength: 50
   },
-  acctExec: {
+  accountExecutive: {
     type: String,
     maxlength: 50
   },
-  acctMngr: {
+  accountManager: {
     type: String,
     maxlength: 50
   },
-  cNumber: {
+  customerNumber: {
     type: String,
     maxlength: 50
   },
@@ -83,7 +81,7 @@ const Schema = mongoose.Schema;
     type: String,
     maxlength: 50
   },
-  estimatedInHomeDelivery: {
+  estimatedHomeDelivery: {
     type: String,
     maxlength: 50
   },
@@ -92,24 +90,19 @@ const Schema = mongoose.Schema;
   },
   emailedProofTo: {
     type: String,
-    match: /^\S+@\S+\.\S+$/
   },
   seedMailer: {
     type: String,
     maxlength: 100
   },
-
-  
   createdDate: {
     type: Date,
     default: Date.now,
   },
-
-  isDeleated: {
+  isDeleted: {
     type: Boolean,
     default: false,
   },
-
   companyId: {
     type: Schema.Types.ObjectId,
     ref: 'company',
@@ -120,9 +113,7 @@ const Schema = mongoose.Schema;
     ref: 'user',
     required: true
   },
-  data: [],
-    
-  
+  data: []
 });
-module.exports = { compaignSchema }
 
+module.exports = { campaignSchema };
