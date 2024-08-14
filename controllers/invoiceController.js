@@ -97,6 +97,11 @@ const createCompany = async (req, res) => {
     try {
         let companyName = req.body.companyName;
 
+        let companyDetails = req.body;
+        if (!companyDetails._id || !mongoose.Types.ObjectId.isValid(companyDetails._id)) {
+          delete companyDetails._id;
+      }
+
         if(!companyName){
           return res.send({ success: false, message: "company name required "});
         }
@@ -107,9 +112,22 @@ const createCompany = async (req, res) => {
         return  res.send({ success: false, message: "company name already exist" });
         }
 
+        if (companyDetails._id) {
+          // Update existing campaign
+          let updateCampaign = await campaignData.findOneAndUpdate(
+            { _id: companyDetails._id },
+            { $set: companyDetails },
+            { new: true }
+        );
+      return res.send({ success: true, data: updateCampaign });
+          
+      } else {
+
+
         let company = await companyData.create({ companyName });
 
         res.send({ success: true, data: company });
+      }
     } catch (error) {
         console.error("MongoDB Error:", error); // Log MongoDB specific error
         return res.status(400).json({ success: false, message: error });
@@ -155,6 +173,9 @@ const getCompany = async (req, res) => {
     try {
         // Extract campaign details from request body
         let campaignDetails = req.body;
+        if (!campaignDetails._id || !mongoose.Types.ObjectId.isValid(campaignDetails._id)) {
+          delete campaignDetails._id;
+      }
 
         if (campaignDetails._id) {
             // Update existing campaign
