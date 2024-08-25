@@ -95,6 +95,10 @@ const campaignSchema = new mongoose.Schema({
     type: String,
     maxlength: 100
   },
+  fileId: {
+    type: String,
+    maxlength: 100
+  },
   createdDate: {
     type: Date,
     default: Date.now,

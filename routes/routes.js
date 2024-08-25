@@ -1,5 +1,5 @@
 const cors = require("cors");
-const { createCompany, getCompany, insertCampaignDetails, getCampaignDetails, createUser, loginUser  } = require("../controllers/invoiceController");
+const { createCompany, getCompany, insertCampaignDetails, makepdf, cloneCampaign, getCampaignDetails, createUser, loginUser  } = require("../controllers/invoiceController");
 
 const CustomRoutes = (http, express) => {
   http.get("/compaignapp", (req, res) => {
@@ -20,6 +20,10 @@ http.post("/invoiceapp/loginUser", loginUser);
 
  // Campaign Routes
  http.post("/invoiceapp/insertCampaignDetails", insertCampaignDetails);
+
+ http.post("/invoiceapp/MakePDF", makepdf);
+ http.post("/invoiceapp/cloneCampaign", cloneCampaign);
+
  http.get("/invoiceapp/getCampaignDetails", getCampaignDetails);
 }
   // http.post("/costingapp/insertFormData", insertFormData);
