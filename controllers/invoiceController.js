@@ -9,7 +9,8 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { google } = require('googleapis');
 const path = require('path');
-const pdf = require('html-pdf-node');
+//const pdf = require('html-pdf-node');
+const pdf = require('html-pdf');
 const fs = require('fs');
 
 
@@ -562,13 +563,25 @@ const cloneCampaign = async (req, res) => {
       let options = { format: 'A4', printBackground: true, };
       let file = { content: html };
   
-  const pdfBuffer = await pdf.generatePdf(file, options);
-  fs.writeFileSync('output.pdf', pdfBuffer);
-  console.log('PDF created successfully!');
+  //const pdfBuffer = await pdf.generatePdf(file, options);
+  //fs.writeFileSync('output.pdf', pdfBuffer);
+  //console.log('PDF created successfully!');
+  pdf.create(html, options).toFile('output.pdf', async (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send({ success: false, message: "PDF Not generated" });
+    }
   
-  let a = await uploadFile(campaign); // Upload the PDF file
-  res.send({ success: true, message: "PDF generated successfully", file: a });
-  
+    console.log(result); // { filename: '/app/output.pdf' }
+    
+    try {
+      let uploadedFile = await uploadFile(campaign); // Upload the PDF file
+      return res.send({ success: true, message: "PDF generated successfully", fileId: uploadedFile.fileId, folderId: uploadedFile.folderId, pdflink: uploadedFile.pdflink  });
+    } catch (uploadError) {
+      console.log(uploadError);
+      return res.send({ success: false, message: "File upload failed" });
+    }
+  });
       
   
     } catch (error) {
@@ -666,7 +679,7 @@ const getFolderId = async (driveService, folderName, parentFolderId = null) => {
       await campaignData.findOneAndUpdate({_id: campaign._id } , {$set: {fileId: file.data.id }})
 
       console.log('Task completed successfully.');
-      return { success: true, fileId: file.data.id, folderId: file.data.id };
+      return { fileId: file.data.id, folderId: file.data.id, pdflink: file.data.id };
   
   
       // const folderName = 'NewFolder'; // Folder name to check or create
